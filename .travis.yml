@@ -1,0 +1,32 @@
+dist: trusty # xenial fail to install oraclejdk8
+language: java
+
+jdk:
+  - openjdk11
+  - openjdk8
+  - oraclejdk8
+
+services:
+  - mongodb
+
+env:
+  -
+  - JPHP_TEST_COMPILED=1
+  - JPHP_TEST_CONCURRENT=1
+
+before_install:
+ - export TZ=
+ - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+ - cat /etc/hosts # optionally check the content *before*
+ - sudo hostname "$(hostname | cut -c1-63)"
+ - sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts | sudo tee /etc/hosts
+ - cat /etc/hosts # optionally check the content *after*
+# - gradle wrapper
+ - chmod +x gradlew
+
+script: ./gradlew check --stacktrace --info -Dfile.encoding=UTF-8
+
+addons:
+  hosts:
+    - myshorthost
+  hostname: myshorthost
