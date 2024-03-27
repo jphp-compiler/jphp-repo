@@ -1,0 +1,24 @@
+apply plugin: 'application'
+
+sourceSets {
+    main.resources.srcDirs = ['src']
+}
+
+dependencies {
+    compile project(':jphp-core')
+    compile project(':exts/jphp-zend-ext')
+    compile project(':exts/jphp-json-ext')
+}
+
+mainClassName = 'php.runtime.launcher.Launcher'
+
+task bench(dependsOn: run) {
+
+}
+
+task benchServer(dependsOn: run.dependsOn) {
+    doFirst {
+        run.jvmArgs += ['-Djphp.benchServer=true']
+        run.execute()
+    }
+}
